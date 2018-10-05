@@ -1,4 +1,3 @@
-# Задание №2 (сложное)
 # Написать алгоритм, который сортирует список по следующему алгоритму:
 #
 # Сортируемый массив разбивается на две части примерно одинакового размера;
@@ -17,7 +16,36 @@
 
 import random
 
-list = random.shuffle(list(range(1, 20)))
 
-if len(list)>1:
+def sort_list(list_to_sort):
+    def merge_lists(list01, list02):
+        result_arr = []
+        i01 = 0
+        i02 = 0
+        while i01 < len(list01) and i02 < len(list02) > 0:
+            if list01[i01] < list02[i02]:
+                result_arr.append(list01[i01])
+                i01 += 1
+            else:
+                result_arr.append(list02[i02])
+                i02 += 1
+        if i01 < len(list01):
+            result_arr += list01[i01:]
+        if i02 < len(list02):
+            result_arr += list02[i02:]
+        return result_arr
 
+    if len(list_to_sort) > 1:
+        median = int(len(list_to_sort) / 2)
+        list1 = sort_list(list_to_sort[:median])
+        list2 = sort_list(list_to_sort[median:])
+        return merge_lists(list1, list2)
+    else:
+        return list_to_sort
+
+
+test_list = list(range(1, 20))
+
+random.shuffle(test_list)
+print(test_list)
+print(sort_list(test_list))
