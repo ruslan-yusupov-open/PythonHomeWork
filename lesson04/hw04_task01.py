@@ -71,7 +71,9 @@ reset_field()
 print_field()
 
 while True:
-    dir_input = input("Введите куда двигать фишку up, down, left, right")
-    move_field(dir_input)
     if check_is_target():
         break
+    dir_input = input("Введите куда двигать фишку up, down, left, right")
+    move_field(dir_input)
+
+print("Успех!")
