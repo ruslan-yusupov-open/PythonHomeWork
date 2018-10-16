@@ -29,12 +29,16 @@ process_state(f)
 print(min(available_states.keys()))
 
 for z in range(0, 10000000):
+
     i = min(available_states.keys())
 
-    process_state(available_states[i].pop())
+    check_state = available_states[i].pop()
+
+    process_state(check_state)
+
     if len(available_states[i]) == 0:
         del available_states[i]
-
+        
 print('ss', len(saved_states))
 print('as', len(available_states))
 print('kl', min(available_states.keys()))
