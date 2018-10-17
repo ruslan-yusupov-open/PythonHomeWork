@@ -26,21 +26,31 @@ def process_state(field_state):
 
 f.print()
 
+check_state = f
 process_state(f)
 print(min(available_states.keys()))
 
 start = time.time()
 
-for z in range(0, 100000):
+besti = 1000000
+beststate = check_state
+
+for z in range(0, 10000000):
 
     i = min(available_states.keys())
 
     check_state = available_states[i].pop()
 
+    if i < besti:
+        besti = i
+        beststate = check_state
+
     process_state(check_state)
 
     if len(available_states[i]) == 0:
         del available_states[i]
+        if len(available_states) == 0:
+            break
 
     if time.time() - start > 10:
         start = time.time()
@@ -49,10 +59,14 @@ for z in range(0, 100000):
         print('as', len(available_states))
         print('kl', min(available_states.keys()))
 
-print('ss', len(saved_states))
-print('as', len(available_states))
-print('kl', min(available_states.keys()))
+if len(available_states) == 0:
+    beststate.print()
+    print(besti)
+else:
+    print('ss', len(saved_states))
+    print('as', len(available_states))
+    print('kl', min(available_states.keys()))
 
-i = min(available_states.keys())
+    i = min(available_states.keys())
 
-available_states[i].pop().print()
+    available_states[i].pop().print()

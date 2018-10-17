@@ -6,62 +6,41 @@ class Field15:
         0: (0, 0),
         1: (1, 0),
         2: (2, 0),
-        3: (3, 0),
-        4: (0, 1),
-        5: (1, 1),
-        6: (2, 1),
-        7: (3, 1),
-        8: (0, 2),
-        9: (1, 2),
-        10: (2, 2),
-        11: (3, 2),
-        12: (0, 3),
-        13: (1, 3),
-        14: (2, 3),
-        15: (3, 3),
+        3: (0, 1),
+        4: (1, 1),
+        5: (2, 1),
+        6: (0, 2),
+        7: (1, 2),
+        8: (2, 2),
     }
 
     reverseCoords = {
         (0, 0): 0,
         (1, 0): 1,
         (2, 0): 2,
-        (3, 0): 3,
-        (0, 1): 4,
-        (1, 1): 5,
-        (2, 1): 6,
-        (3, 1): 7,
-        (0, 2): 8,
-        (1, 2): 9,
-        (2, 2): 10,
-        (3, 2): 11,
-        (0, 3): 12,
-        (1, 3): 13,
-        (2, 3): 14,
-        (3, 3): 15,
+        (0, 1): 3,
+        (1, 1): 4,
+        (2, 1): 5,
+        (0, 2): 6,
+        (1, 2): 7,
+        (2, 2): 8,
     }
 
     perfectPosition = {
         '1': (0, 0),
         '2': (1, 0),
         '3': (2, 0),
-        '4': (3, 0),
-        '5': (0, 1),
-        '6': (1, 1),
-        '7': (2, 1),
-        '8': (3, 1),
-        '9': (0, 2),
-        'a': (1, 2),
-        'b': (2, 2),
-        'c': (3, 2),
-        'd': (0, 3),
-        'e': (1, 3),
-        'f': (2, 3),
-        ' ': (3, 3),
+        '4': (0, 1),
+        '5': (1, 1),
+        '6': (2, 1),
+        '7': (0, 2),
+        '8': (1, 2),
+        ' ': (2, 3),
     }
 
     __way = ''
 
-    NORM_STR = '123456789abcdef '
+    NORM_STR = '12345678 '
 
     @staticmethod
     def __get_distance(point1, point2):
@@ -88,10 +67,9 @@ class Field15:
 
     def print(self):
         print(self.__way)
-        print(self.__state[0:4])
-        print(self.__state[4:8])
-        print(self.__state[8:12])
-        print(self.__state[12:16])
+        print(self.__state[0:3])
+        print(self.__state[3:6])
+        print(self.__state[6:9])
         print(self.__empty_coords)
         print(self.__possible_movements)
         print(self.distance)
@@ -99,11 +77,11 @@ class Field15:
     def __fill_possible_movements(self):
         if self.__empty_coords[0] > 0:
             self.__possible_movements.append('r')
-        if self.__empty_coords[0] < 3:
+        if self.__empty_coords[0] < 2:
             self.__possible_movements.append('l')
         if self.__empty_coords[1] > 0:
             self.__possible_movements.append('d')
-        if self.__empty_coords[1] < 3:
+        if self.__empty_coords[1] < 2:
             self.__possible_movements.append('u')
 
     def get_possible_movements(self):
@@ -127,7 +105,7 @@ class Field15:
 
     def set_metric(self):
         self.distance = 0
-        for i in range(0, 16):
+        for i in range(0, 9):
             char = self.__state[i]
-            self.distance += Field15.__get_distance(self.perfectPosition[char], self.coords[i])
-            self.distance += len(self.__way)
+            self.distance += Field15.__get_distance(self.perfectPosition[char], self.coords[i]) * (9 - i)
+            # self.distance += len(self.__way)
