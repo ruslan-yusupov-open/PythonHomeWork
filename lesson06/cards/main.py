@@ -1,17 +1,8 @@
 import random
 
 
-class Card:
-    # suit - h
-    # rank 2-10, 11 - jack, 12 - queen, 13 - king, 14 - ace
-    suits = {
-        'clubs': '♣',
-        'diamonds': '♦',
-        'hearts': '♥',
-        'spades': '♠'}
-
-    def __init__(self, suit, rank):
-        self.suit = suit
+class AbstractCard:
+    def __init__(self, rank):
         self.rank = rank
 
     def __rank_to_str(self):
@@ -23,10 +14,34 @@ class Card:
             return 'K'
         if self.rank == 14:
             return 'A'
+        if self.rank == 15:
+            return '*'
         return str(self.rank)
+
+
+class Card(AbstractCard):
+    # suit - h
+    # rank 2-10, 11 - jack, 12 - queen, 13 - king, 14 - ace
+    def __init__(self, suit, rank):
+        super().__init__(rank)
+        self.suit = suit
+
+    suits = {
+        'clubs': '♣',
+        'diamonds': '♦',
+        'hearts': '♥',
+        'spades': '♠'}
 
     def __str__(self):
         return "{rank}{suit}".format(rank=self.__rank_to_str(), suit=self.suits[self.suit])
+
+
+class Jocker(AbstractCard):
+    def __init__(self):
+        super().__init__(15)
+
+    def __str__(self):
+        return "{rank}".format(rank=self.__rank_to_str())
 
 
 class Deck:
@@ -44,3 +59,16 @@ class Deck:
             print(card)
 
 
+class Hand:
+    def __init__(self, cards_count):
+        self.__the_cards = []
+        self.cards_count = cards_count
+
+    def add_card(self, card):
+        self.__the_cards.append(card)
+
+
+deck = Deck()
+
+h1 = Hand(5)
+h2 = Hand(5)
