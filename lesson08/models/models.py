@@ -12,7 +12,7 @@ class Ship:
         self.length = length
         self.orientation = orientation
         self.x = ord(x) - ord('a')
-        self.y = y
+        self.y = int(y)
 
     def get_coords(self):
         if self.orientation == 'v':
@@ -50,12 +50,16 @@ class Field:
         self.ships.append(ship)
 
     def check_ships_collision(self, ship):
+        for coord in ship.get_coords():
+            if coord[0] not in range(0, X_SIZE) or coord[1] not in range(0, Y_SIZE):
+                raise ValueError("корабль выходит за границу поля")
+
         for coord in ship.get_proximity_coords():
             other_ship: Ship
             for other_ship in self.ships:
                 for other_coord in other_ship.get_coords():
                     if other_coord[0] == coord[0] and other_coord[1] == coord[1]:
-                        raise ValueError("ships shouldn't be so close")
+                        raise ValueError("корабли стоят слишком близко")
 
     def print(self):
         # noinspection PyUnusedLocal
