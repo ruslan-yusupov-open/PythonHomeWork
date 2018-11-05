@@ -9,6 +9,8 @@ player1_field = Field()
 
 need_to_insert = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4]
 
+random.seed(127)
+
 
 def random_fill():
     while len(need_to_insert) > 0:
@@ -53,6 +55,33 @@ def interactive_fill():
 
 
 random_fill()
+
+player1_field.attack('a', '0')
+player1_field.attack('a', '2')
+player1_field.attack('a', '0')
+player1_field.attack('a', '3')
+player1_field.attack('a', '4')
+player1_field.attack('a', '5')
+player1_field.attack('b', '5')
+player1_field.attack('a', '7')
+player1_field.print()
+
+while False:
+    invite = "куда палить?, (буква, цифра, например a0)"
+
+    try:
+        input_str = input(invite)
+
+        if not match(r"^[a-j][0-9]$", input_str):
+            raise ValueError("плохой ввод")
+
+        player1_field.attack(input_str[0], input_str[1])
+        player1_field.print()
+
+    except ValueError as v:
+        print("ошибка " + str(v))
+        continue
+
 # input_str = "a8h"
 #
 # player1_field.add_ship(Ship(input_str[0], input_str[1], 4, input_str[2]))
