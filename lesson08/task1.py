@@ -1,86 +1,102 @@
 # Морской бой для двух игроков, есть 2 поля, где выставляются корабли
 # есть 4 корабля по 1 клетке, 3 по 2 клетки, 2 по 3 клетки и 1 по 4 клетки
 # корабли нельзя ставить впритык
-from models.models import Field, Ship
 import random
 from re import match
-
-player1_field = Field()
-
-need_to_insert = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4]
+from models.models import Field, Ship, Player
 
 random.seed(127)
 
+player1 = Player("Player 1")
+player2 = Player("Player 2")
 
-def random_fill():
-    while len(need_to_insert) > 0:
-        to_insert_len = need_to_insert[len(need_to_insert) - 1]
-        # TODO: для корабля длинной 1 ориентация не нужна
+print("{}, введи поле:".format(player1.name))
+player1.init()
 
+print("{}, введи поле:".format(player2.name))
+player2.init()
+
+active_player_num = 1
+
+endgame = False
+
+while True:
+    attacking_player = player1 if active_player_num == 1 else player2
+    attacked_player = player2 if active_player_num == 1 else player1
+
+    while True:
         try:
-            x = chr(random.randint(0, 9) + ord('a'))
-            y = random.randint(0, 9)
-            o = random.choice(('h', 'v'))
+            print("{}, твой ход".format(attacking_player.name))
+            print("твое поле:")
+            attacking_player.field.print()
+            print("поле врага:")
+            attacked_player.field.print(hidden=True)
 
-            player1_field.add_ship(Ship(x, y, to_insert_len, o))
-        except ValueError as v:
-            # print("ошибка " + str(v))
-            continue
-
-        del need_to_insert[len(need_to_insert) - 1]
-
-    player1_field.print()
-
-
-def interactive_fill():
-    while len(need_to_insert) > 0:
-        to_insert_len = need_to_insert[len(need_to_insert) - 1]
-        # TODO: для корабля длинной 1 ориентация не нужна
-        invite = "введите корабль, длинна {} (буква, цифра, ориентация (h,v), например a0v) ".format(to_insert_len)
-
-        try:
+            invite = "{}, куда палить?, (буква, цифра, например a0)".format(attacking_player.name)
             input_str = input(invite)
 
-            if not match(r"^[a-j][0-9][hv]$", input_str):
+            if not match(r"^[a-j][0-9]$", input_str):
                 raise ValueError("плохой ввод")
 
-            player1_field.add_ship(Ship(input_str[0], input_str[1], to_insert_len, input_str[2]))
-            player1_field.print()
+            result = attacked_player.field.attack(input_str[0], input_str[1])
+
+            print(attacked_player.name)
+            attacked_player.field.print(hidden=True)
+
+            if result is False:
+                active_player_num = 2 if active_player_num == 1 else 1
+            else:
+                if attacked_player.field.check_all_ships_dead():
+                    print("Игрок {} победил".format(attacking_player.name))
+                    endgame = True
 
         except ValueError as v:
             print("ошибка " + str(v))
             continue
 
-        del need_to_insert[len(need_to_insert) - 1]
+        break
+
+    if endgame is True:
+        break
+
+# первый игрок введи поле
+# второй игрок введи поле
+
+# кто ходит?
+# while True
+#   игрок огонь
+#   карта своя, карта врага
+#   не попал - перход хода
+#   проиграл?
+#
 
 
-random_fill()
-
-player1_field.attack('a', '0')
-player1_field.attack('a', '2')
-player1_field.attack('a', '0')
-player1_field.attack('a', '3')
-player1_field.attack('a', '4')
-player1_field.attack('a', '5')
-player1_field.attack('b', '5')
-player1_field.attack('a', '7')
-player1_field.print()
-
-while False:
-    invite = "куда палить?, (буква, цифра, например a0)"
-
-    try:
-        input_str = input(invite)
-
-        if not match(r"^[a-j][0-9]$", input_str):
-            raise ValueError("плохой ввод")
-
-        player1_field.attack(input_str[0], input_str[1])
-        player1_field.print()
-
-    except ValueError as v:
-        print("ошибка " + str(v))
-        continue
+#
+# player1_field.attack('a', '0')
+# player1_field.attack('a', '2')
+# player1_field.attack('a', '0')
+# player1_field.attack('a', '3')
+# player1_field.attack('a', '4')
+# player1_field.attack('a', '5')
+# player1_field.attack('b', '5')
+# player1_field.attack('a', '7')
+# player1_field.print()
+#
+# while False:
+#     invite = "куда палить?, (буква, цифра, например a0)"
+#
+#     try:
+#         input_str = input(invite)
+#
+#         if not match(r"^[a-j][0-9]$", input_str):
+#             raise ValueError("плохой ввод")
+#
+#         player1_field.attack(input_str[0], input_str[1])
+#         player1_field.print()
+#
+#     except ValueError as v:
+#         print("ошибка " + str(v))
+#         continue
 
 # input_str = "a8h"
 #

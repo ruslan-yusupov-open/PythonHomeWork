@@ -1,6 +1,12 @@
+import random
+from re import match
+
 # размера поля жестко задан 10х10
 X_SIZE = 10
 Y_SIZE = 10
+
+# DEFAULT_SHIPS = (1, 1, 1, 1, 2, 2, 2, 3, 3, 4)
+DEFAULT_SHIPS = (2,)
 
 
 class Coord:
@@ -36,6 +42,7 @@ class Ship:
             if coord[1] == attack_point:
                 self.damage[coord[0]] = True
                 print("убит!" if self.check_if_dead() else "ранен!")
+                return True
 
         return False
 
@@ -92,15 +99,28 @@ class Field:
                     if coord == other_coord:
                         raise ValueError("корабли стоят слишком близко")
 
-    def print(self):
+    def print(self, hidden=False):
         # noinspection PyUnusedLocal
         temp_matrix = [[' ' for x in range(X_SIZE + 1)] for y in range(Y_SIZE + 1)]
         self.__init_temp_matrix(temp_matrix)
         for ship in self.ships:
-            self.render_ship_proximity_on_temp_matrix(ship, temp_matrix)
+            if not hidden or ship.check_if_dead():
+                self.render_ship_proximity_on_temp_matrix(ship, temp_matrix)
         self.__render_attack_points_on_temp_matrix(temp_matrix)
         for ship in self.ships:
-            self.render_ship_on_temp_matrix(ship, temp_matrix)
+            self.render_ship_on_temp_matrix(ship, temp_matrix, hidden)
+
+        #
+        # if hidden is True:
+        #     # noinspection PyUnusedLocal
+        #     temp_matrix_hidden = [[' ' for x in range(X_SIZE + 1)] for y in range(Y_SIZE + 1)]
+        #     self.__init_temp_matrix(temp_matrix_hidden)
+        #
+        #     for point in self.attack_points:
+        #         temp_matrix_hidden[point.x + 1][point.y + 1] = temp_matrix[point.x + 1][point.y + 1]
+        #
+        #     temp_matrix = temp_matrix_hidden
+
         self.__print_temp_matrix(temp_matrix)
 
     @staticmethod
@@ -110,12 +130,15 @@ class Field:
             temp_matrix[coord.x + 1][coord.y + 1] = "."
 
     @staticmethod
-    def render_ship_on_temp_matrix(ship, temp_matrix):
+    def render_ship_on_temp_matrix(ship, temp_matrix, hidden):
         coords = ship.get_coords()
         for num_coord in enumerate(coords):
             damage = ship.damage[num_coord[0]]
             coord = num_coord[1]
-            temp_matrix[coord.x + 1][coord.y + 1] = "X" if damage else "S"
+            if damage:
+                temp_matrix[coord.x + 1][coord.y + 1] = "X"
+            elif not hidden:
+                temp_matrix[coord.x + 1][coord.y + 1] = "S"
 
     def __render_attack_points_on_temp_matrix(self, temp_matrix):
         for coord in self.attack_points:
@@ -141,8 +164,81 @@ class Field:
         y = int(y_input)
         attack_point = Coord(x, y)
 
+        for point in self.attack_points:
+            if point == attack_point:
+                raise ValueError("эту точку уже атаковали")
+
         self.attack_points.append(attack_point)
 
         for ship in self.ships:
             if ship.attack(attack_point):
-                break
+                return True
+
+        print("мимо!")
+        return False
+
+    def check_all_ships_dead(self):
+        for ship in self.ships:
+            if ship.check_if_dead() is False:
+                return False
+
+        return True
+
+
+class Player:
+    def __init__(self, name, is_robot=False, need_to_insert=DEFAULT_SHIPS):
+        self.field = Field()
+        self.need_to_insert = list(need_to_insert)
+        self.name = name
+        self.is_robot = is_robot
+
+    def init(self):
+        if not self.is_robot:
+            self.interactive_fill()
+            self.random_fill()
+
+    def random_fill(self):
+        while len(self.need_to_insert) > 0:
+            to_insert_len = self.need_to_insert[-1]
+            # TODO: для корабля длинной 1 ориентация не нужна
+
+            try:
+                x = chr(random.randint(0, 9) + ord('a'))
+                y = random.randint(0, 9)
+                o = random.choice(('h', 'v'))
+
+                self.field.add_ship(Ship(x, y, to_insert_len, o))
+            except ValueError:
+                continue
+
+            del self.need_to_insert[-1]
+
+        self.field.print()
+
+    def interactive_fill(self):
+        while len(self.need_to_insert) > 0:
+            to_insert_len = self.need_to_insert[-1]
+            # TODO: для корабля длинной 1 ориентация не нужна
+            invite = "введите корабль, длинна {} (буква, цифра, ориентация (h,v), например a0v) " \
+                     "или auto для автозаполнения:  ".format(to_insert_len)
+
+            try:
+                input_str = input(invite)
+
+                if input_str == 'auto':
+                    break
+
+                if input_str == '':
+                    break
+
+                if not match(r"^[a-j][0-9][hv]$", input_str):
+                    raise ValueError("плохой ввод")
+
+                self.field.add_ship(Ship(input_str[0], input_str[1], to_insert_len, input_str[2]))
+                self.field.print()
+
+            except ValueError as v:
+                print("ошибка " + str(v))
+                continue
+
+            del self.need_to_insert[len(self.need_to_insert) - 1]
