@@ -4,8 +4,6 @@ import random
 from re import match
 from models.models import Player
 
-# random.seed(127)
-
 player1 = Player("Player 1")
 player2 = Player("Player 2", is_robot=True)
 
@@ -26,7 +24,7 @@ while True:
         print("{}, твой ход".format(attacking_player.name))
     else:
         print("{}, ходит компьютер".format(attacking_player.name))
-        
+
     while True:
         try:
             if attacking_player.is_robot is False:

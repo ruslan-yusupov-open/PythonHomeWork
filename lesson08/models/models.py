@@ -8,9 +8,6 @@ Y_SIZE = 10
 DEFAULT_SHIPS = (1, 1, 1, 1, 2, 2, 2, 3, 3, 4)
 
 
-# DEFAULT_SHIPS = (4,)
-
-
 class Coord:
     def __init__(self, x, y):
         self.x = x
@@ -111,17 +108,6 @@ class Field:
         self.__render_attack_points_on_temp_matrix(temp_matrix)
         for ship in self.ships:
             self.render_ship_on_temp_matrix(ship, temp_matrix, hidden)
-
-        #
-        # if hidden is True:
-        #     # noinspection PyUnusedLocal
-        #     temp_matrix_hidden = [[' ' for x in range(X_SIZE + 1)] for y in range(Y_SIZE + 1)]
-        #     self.__init_temp_matrix(temp_matrix_hidden)
-        #
-        #     for point in self.attack_points:
-        #         temp_matrix_hidden[point.x + 1][point.y + 1] = temp_matrix[point.x + 1][point.y + 1]
-        #
-        #     temp_matrix = temp_matrix_hidden
 
         self.__print_temp_matrix(temp_matrix)
 
