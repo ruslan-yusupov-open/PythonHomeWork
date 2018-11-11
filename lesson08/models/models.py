@@ -5,8 +5,10 @@ from re import match
 X_SIZE = 10
 Y_SIZE = 10
 
-# DEFAULT_SHIPS = (1, 1, 1, 1, 2, 2, 2, 3, 3, 4)
-DEFAULT_SHIPS = (2,)
+DEFAULT_SHIPS = (1, 1, 1, 1, 2, 2, 2, 3, 3, 4)
+
+
+# DEFAULT_SHIPS = (4,)
 
 
 class Coord:
@@ -196,6 +198,8 @@ class Player:
         if not self.is_robot:
             self.interactive_fill()
             self.random_fill()
+        else:
+            self.random_fill()
 
     def random_fill(self):
         while len(self.need_to_insert) > 0:
@@ -213,7 +217,7 @@ class Player:
 
             del self.need_to_insert[-1]
 
-        self.field.print()
+        # self.field.print()
 
     def interactive_fill(self):
         while len(self.need_to_insert) > 0:

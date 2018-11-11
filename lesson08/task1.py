@@ -1,11 +1,11 @@
 # Морской бой для двух игроков, есть 2 поля, где выставляются корабли
 # есть 4 корабля по 1 клетке, 3 по 2 клетки, 2 по 3 клетки и 1 по 4 клетки
 # корабли нельзя ставить впритык
-import random
+# import random
 from re import match
-from models.models import Field, Ship, Player
+from models.models import Player
 
-random.seed(127)
+# random.seed(127)
 
 player1 = Player("Player 1")
 player2 = Player("Player 2")
