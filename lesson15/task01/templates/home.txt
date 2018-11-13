@@ -1,0 +1,10 @@
+BOARD:
+{% for post in posts %}
+    Заголовок: {{ post.header }}
+    Сообщение: {{ post.message }}
+    Комменты:
+    {% for comment in post.comments %}
+        - {{comment.message}}
+    {% endfor %}
+{% endfor %}
+END
