@@ -22,7 +22,7 @@ def index():
     for post in posts:
         post.comments = Comment.query.filter_by(post=post).all()
 
-    return render_template('home.txt', posts=posts)
+    return render_template('home.html', posts=posts)
 
 
 @app.route('/createPost', methods=['POST'])
@@ -46,7 +46,7 @@ def create_post():
     # user = User.query.filter(id=posts[0].user_id)
     # user = posts[0].user
 
-    return render_template('home.txt', posts=posts)
+    return render_template('home.html', posts=posts)
 
 
 @app.route('/createComment', methods=['POST'])
@@ -71,7 +71,7 @@ def create_comment():
     # user = User.query.filter(id=posts[0].user_id)
     # user = posts[0].user
 
-    return render_template('home.txt', posts=posts)
+    return render_template('home.html', posts=posts)
 
 
 def populate_db():
