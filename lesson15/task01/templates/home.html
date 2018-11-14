@@ -18,69 +18,73 @@
 <body>
 <!-- START HERE -->
 
-<section id="add_new_message" class="d-flex justify-content-center">
-    <div class="m-2 p-2 border rounded d-flex container-fluid">
-        <form action="/createPost" class="w-100" method="POST">
-            <div class="form-group">
-                <label for="inputTitle">
-                    <i class="fas fa-pencil-alt mr-1"> </i>Title</label>
-                <input type="text" class="form-control" id="inputTitle" name="header"
-                       placeholder="Enter title">
-            </div>
-            <div class="form-group">
-                <label for="inputBody">
-                    <i class="fas fa-pencil-alt mr-1"> </i>Message</label>
-                <textarea class="form-control" id="inputBody" name="message"
-                          placeholder="Enter message"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
-</section>
-
-
-<section id="posts" class="d-flex justify-content-center">
-    <div class="container-fluid m-2 p-2 border rounded d-flex">
-        <table class="table border">
-            <tbody>
-            {% for post in posts %}
-            <tr>
-                <td>
-                    <div class="card m-2">
-                        <div class="card-header"> Заголовок: {{ post.header }}</div>
-                        <div class="card-body"> Сообщение: {{ post.message }}</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 ml-2 m-2 p-2">
+            <section id="add_new_message">
+                <form action="/createPost" method="POST">
+                    <div class="form-group">
+                        <label for="inputTitle">
+                            <i class="fas fa-pencil-alt mr-1"> </i>Title</label>
+                        <input type="text" class="form-control" id="inputTitle" name="header"
+                               placeholder="Enter title">
                     </div>
-                    <div class="m-2 pl-2">
-                        {% if post.comments|length>0 %}
-                        <h5>Comments:</h5>
-                        <div class="m-1 p-1">
-                            <ul>
-                                {% for comment in post.comments %}
-                                <li>{{comment.message}}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        {%endif%}
-                        <form action="/createComment" method="POST">
-                            <input type="hidden" name="post_id" value="{{post.id}}">
-                            <div class="form-group">
-                                <label for="inputComment">
-                                    <i class="fas fa-pencil-alt"> </i>Add new comment</label>
-                                <input type="text" class="form-control" id="inputComment" name="message"
-                                       placeholder="Enter comment">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-
+                    <div class="form-group">
+                        <label for="inputBody">
+                            <i class="fas fa-pencil-alt mr-1"> </i>Message</label>
+                        <textarea class="form-control" id="inputBody" name="message"
+                                  placeholder="Enter message"></textarea>
                     </div>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</section>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </section>
+        </div>
 
+        <div class="col-md-7">
+            <section id="posts">
+                <div class="container">
+                    <table class="table p-2 border rounded mt-2">
+                        <tbody>
+                        {% for post in posts %}
+                        <tr>
+                            <td>
+                                <div class="card m-2">
+                                    <div class="card-header"> Заголовок: {{ post.header }}</div>
+                                    <div class="card-body"> Сообщение: {{ post.message }}</div>
+                                </div>
+                                <div class="m-2 pl-2">
+                                    {% if post.comments|length>0 %}
+                                    <h5>Comments:</h5>
+                                    <div class="m-1 p-1">
+                                        <ul>
+                                            {% for comment in post.comments %}
+                                            <li>{{comment.message}}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {%endif%}
+                                    <form action="/createComment" method="POST">
+                                        <input type="hidden" name="post_id" value="{{post.id}}">
+                                        <div class="form-group">
+                                            <label for="inputComment">
+                                                <i class="fas fa-pencil-alt"> </i>Add new comment</label>
+                                            <input type="text" class="form-control" id="inputComment" name="message"
+                                                   placeholder="Enter comment">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
 <script src="http://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
