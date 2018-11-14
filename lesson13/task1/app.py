@@ -5,6 +5,8 @@ from werkzeug.exceptions import abort
 
 import config as config
 
+MAX_PER_PAGE = 5
+
 app = Flask(__name__, template_folder='templates')
 app.config.from_object(config)
 
@@ -22,6 +24,16 @@ def page_not_found(e):
 @app.route('/', methods=['GET'])
 def index():
     from models import GuestBookItem
+
+    per_page = 5
+    page = 2
+    sort = "id"
+    order = "desc"
+    filters = {
+        "author": "ivan",
+        "id": ("gte", 5),
+    }
+    fields = ["id", "author", "message"]
 
     # ide генерирует ошибку, если запихивать false inline, is False не работает
     false = False
@@ -181,9 +193,11 @@ def items_id_patch(post_id):
 def populate_db():
     print('Creating default user')
     # Creating new ones:
-    ivan = GuestBookItem(author="Ivan", message="Hi there!")
 
-    db.session.add(ivan)
+    for i in range(1, 10):
+        ivan = GuestBookItem(author="Ivan", message="Hi there! " + str(i))
+        db.session.add(ivan)
+
     db.session.commit()  # note
 
 
