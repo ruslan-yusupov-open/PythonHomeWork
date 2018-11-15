@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 from werkzeug.exceptions import abort
 
 import config as config
@@ -24,14 +25,17 @@ def page_not_found(e):
 @app.route('/', methods=['GET'])
 def index():
     from models import GuestBookItem
+    from forms import QueryItemsForm
 
-    per_page = 5
-    page = 2
-    sort = "id"
+    # http://127.0.0.1:5000/?per_page=6&page=1&sort=-id&author=Ivan&id=%3E=2&fields=id,author,message
+
+    per_page = 6
+    page = 1
+    sort_field = "id"
     order = "desc"
     filters = {
-        "author": "ivan",
-        "id": ("gte", 5),
+        "author": ("eq", "Ivan"),
+        "id": ("gt", 0),
     }
     fields = ["id", "author", "message"]
 
@@ -39,9 +43,52 @@ def index():
     false = False
     posts = GuestBookItem.query.filter(GuestBookItem.is_deleted == false)
 
-    posts = [dict(post.to_dict()) for post in posts]
+    posts = filter_items(posts, filters)
 
-    return jsonify(posts)
+    posts = sort_items(posts, sort_field, order)
+
+    total_count = posts.count()
+
+    # pagination
+    posts = posts.paginate(page, per_page, False, MAX_PER_PAGE).items
+
+    posts = [dict(post.to_dict(fields)) for post in posts]
+
+    resp = make_response(jsonify(posts))
+    resp.headers['X-Total-Count'] = total_count
+    resp.headers['Link'] = '/items'
+
+    return resp
+
+
+def filter_items(posts, filters):
+    for field in filters:
+        filter_item = filters[field]
+
+        sort_item = GuestBookItem.get_field(field)
+
+        if sort_item:
+            if filter_item[0] == "eq":
+                posts = posts.filter(sort_item == filter_item[1])
+            if filter_item[0] == "neq":
+                posts = posts.filter(sort_item != filter_item[1])
+            if filter_item[0] == "gt":
+                posts = posts.filter(sort_item > filter_item[1])
+            if filter_item[0] == "gte":
+                posts = posts.filter(sort_item >= filter_item[1])
+            if filter_item[0] == "lt":
+                posts = posts.filter(sort_item < filter_item[1])
+            if filter_item[0] == "lte":
+                posts = posts.filter(sort_item <= filter_item[1])
+    return posts
+
+
+def sort_items(posts, sort_field, order):
+    if sort_field:
+        sort_item = GuestBookItem.get_field(sort_field)
+        if sort_item:
+            posts = posts.order_by(desc(sort_item) if order == "desc" else sort_item)
+    return posts
 
 
 @app.route('/items', methods=['POST'])

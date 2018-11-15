@@ -2,7 +2,7 @@
 
 # from flask_wtf import FlaskForm
 # from wtforms import fields, validators
-from wtforms import TextField, StringField, validators
+from wtforms import TextField, StringField, validators, IntegerField
 from wtforms.validators import Optional
 from wtforms_alchemy import ModelForm
 
@@ -22,3 +22,11 @@ class PatchPostForm(ModelForm):
             'message': {'validators': [validators.Length(min=6), Optional()]},
             'author': {'validators': [Optional()]}
         }
+
+
+class QueryItemsForm(ModelForm):
+    page = IntegerField(validators=[validators.Optional()])
+    per_page = IntegerField(validators=[validators.Optional()])
+    sort = StringField(validators=[validators.Optional()])
+    fields = StringField(validators=[validators.Optional()])
+
