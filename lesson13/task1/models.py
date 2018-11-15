@@ -27,7 +27,7 @@ class GuestBookItem(db.Model):
             # private "is_deleted": self.is_deleted
         }
 
-        if filter_fields is not None:
+        if len(filter_fields) > 0:
             new_dict = {}
             for field in ret_dict:
                 if field in filter_fields:

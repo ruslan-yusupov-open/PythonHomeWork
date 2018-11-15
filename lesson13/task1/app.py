@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+
 from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
@@ -25,19 +27,60 @@ def page_not_found(e):
 @app.route('/', methods=['GET'])
 def index():
     from models import GuestBookItem
-    from forms import QueryItemsForm
-
     # http://127.0.0.1:5000/?per_page=6&page=1&sort=-id&author=Ivan&id=%3E=2&fields=id,author,message
 
-    per_page = 6
+    # defaults
+    per_page = MAX_PER_PAGE
     page = 1
     sort_field = "id"
-    order = "desc"
-    filters = {
-        "author": ("eq", "Ivan"),
-        "id": ("gt", 0),
-    }
-    fields = ["id", "author", "message"]
+    order = "asc"
+    filters = {}
+    fields = []
+
+    for arg in request.args:
+        if arg == "per_page":
+            per_page = int(request.args['per_page'])
+        elif arg == "page":
+            page = int(request.args['page'])
+        elif arg == "sort":
+            sort_val = request.args['sort']
+            if_minus = re.search(r"^-(.+)$", sort_val)
+            if if_minus:
+                sort_val = if_minus.group(1)
+
+            if GuestBookItem.get_field(sort_val):
+                sort_field = sort_val
+                if if_minus:
+                    order = "desc"
+        elif arg == "fields":
+            fields_val = request.args[arg].split(",")
+            for field_val in fields_val:
+                if GuestBookItem.get_field(field_val):
+                    fields.append(field_val)
+
+        else:
+            if GuestBookItem.get_field(arg):
+                val = request.args[arg]
+                filter_type = "eq"
+
+                checks = (
+                    ("neq", re.search(r"^!(.+)$", val)),
+                    ("neq", re.search(r"^<>(.+)$", val)),
+                    ("gte", re.search(r"^>=(.+)$", val)),
+                    ("lte", re.search(r"^<=(.+)$", val)),
+                    ("gt", re.search(r"^>[^=](.+)$", val)),
+                    ("lt", re.search(r"^<[^=](.+)$", val)),
+                )
+
+                for check in checks:
+                    if check[1]:
+                        filter_type = check[0]
+                        val = check[1].group(1)
+                        break
+
+                filters[arg] = (filter_type, val)
+
+    print(per_page, page, sort_field, order, filters, fields)
 
     # ide генерирует ошибку, если запихивать false inline, is False не работает
     false = False
@@ -50,7 +93,8 @@ def index():
     total_count = posts.count()
 
     # pagination
-    posts = posts.paginate(page, per_page, False, MAX_PER_PAGE).items
+    per_page = min(per_page, MAX_PER_PAGE)
+    posts = posts.paginate(page, per_page, False).items
 
     posts = [dict(post.to_dict(fields)) for post in posts]
 
