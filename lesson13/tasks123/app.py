@@ -27,7 +27,7 @@ def page_not_found(e):
 @app.route('/', methods=['GET'])
 def index():
     from models import GuestBookItem
-    # http://127.0.0.1:5000/?per_page=6&page=1&sort=-id&author=Ivan&id=%3E=2&fields=id,author,message
+    # http://127.0.0.1:5000/items?per_page=6&page=1&sort=-id&author=Ivan&id=%3E=2&fields=id,author,message
 
     # defaults
     per_page = MAX_PER_PAGE
