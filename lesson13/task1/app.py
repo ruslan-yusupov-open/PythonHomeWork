@@ -37,48 +37,9 @@ def index():
     filters = {}
     fields = []
 
-    for arg in request.args:
-        if arg == "per_page":
-            per_page = int(request.args['per_page'])
-        elif arg == "page":
-            page = int(request.args['page'])
-        elif arg == "sort":
-            sort_val = request.args['sort']
-            if_minus = re.search(r"^-(.+)$", sort_val)
-            if if_minus:
-                sort_val = if_minus.group(1)
+    args = request.args
 
-            if GuestBookItem.get_field(sort_val):
-                sort_field = sort_val
-                if if_minus:
-                    order = "desc"
-        elif arg == "fields":
-            fields_val = request.args[arg].split(",")
-            for field_val in fields_val:
-                if GuestBookItem.get_field(field_val):
-                    fields.append(field_val)
-
-        else:
-            if GuestBookItem.get_field(arg):
-                val = request.args[arg]
-                filter_type = "eq"
-
-                checks = (
-                    ("neq", re.search(r"^!(.+)$", val)),
-                    ("neq", re.search(r"^<>(.+)$", val)),
-                    ("gte", re.search(r"^>=(.+)$", val)),
-                    ("lte", re.search(r"^<=(.+)$", val)),
-                    ("gt", re.search(r"^>[^=](.+)$", val)),
-                    ("lt", re.search(r"^<[^=](.+)$", val)),
-                )
-
-                for check in checks:
-                    if check[1]:
-                        filter_type = check[0]
-                        val = check[1].group(1)
-                        break
-
-                filters[arg] = (filter_type, val)
+    order, page, per_page, sort_field = process_args(args, fields, filters, order, page, per_page, sort_field)
 
     print(per_page, page, sort_field, order, filters, fields)
 
@@ -100,9 +61,69 @@ def index():
 
     resp = make_response(jsonify(posts))
     resp.headers['X-Total-Count'] = total_count
-    resp.headers['Link'] = '/items'
+    resp.headers['Link'] = get_link_header(page, per_page, total_count)
 
     return resp
+
+
+def get_link_header(page, per_page, total_count):
+    total_pages = int(total_count / per_page) + 1
+    first_link = '/items?page={}&per_page={}'.format(1, per_page)
+    last_link = '/items?page={}&per_page={}'.format(total_pages, per_page)
+    next_link = '/items?page={}&per_page={}'.format(page + 1, per_page) if page < total_pages else None
+    prev_link = '/items?page={}&per_page={}'.format(page - 1, per_page) if page > 1 else None
+    link_header = '<{}>; rel="first", <{}>; rel="last"'.format(first_link, last_link)
+    if next_link:
+        link_header += ',<{}>; rel="next"'.format(next_link)
+    if prev_link:
+        link_header += ',<{}>; rel="prev"'.format(prev_link)
+    return link_header
+
+
+def process_args(args, fields, filters, order, page, per_page, sort_field):
+    for arg in args:
+        if arg == "per_page":
+            per_page = int(args['per_page'])
+        elif arg == "page":
+            page = int(args['page'])
+        elif arg == "sort":
+            sort_val = args['sort']
+            if_minus = re.search(r"^-(.+)$", sort_val)
+            if if_minus:
+                sort_val = if_minus.group(1)
+
+            if GuestBookItem.get_field(sort_val):
+                sort_field = sort_val
+                if if_minus:
+                    order = "desc"
+        elif arg == "fields":
+            fields_val = args[arg].split(",")
+            for field_val in fields_val:
+                if GuestBookItem.get_field(field_val):
+                    fields.append(field_val)
+
+        else:
+            if GuestBookItem.get_field(arg):
+                val = args[arg]
+                filter_type = "eq"
+
+                checks = (
+                    ("neq", re.search(r"^!(.+)$", val)),
+                    ("neq", re.search(r"^<>(.+)$", val)),
+                    ("gte", re.search(r"^>=(.+)$", val)),
+                    ("lte", re.search(r"^<=(.+)$", val)),
+                    ("gt", re.search(r"^>[^=](.+)$", val)),
+                    ("lt", re.search(r"^<[^=](.+)$", val)),
+                )
+
+                for check in checks:
+                    if check[1]:
+                        filter_type = check[0]
+                        val = check[1].group(1)
+                        break
+
+                filters[arg] = (filter_type, val)
+    return order, page, per_page, sort_field
 
 
 def filter_items(posts, filters):
