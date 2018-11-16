@@ -1,3 +1,5 @@
 .idea/
 venv/
 *.pyc
+lesson14/task01/test.db
+lesson15/task01/test.db
