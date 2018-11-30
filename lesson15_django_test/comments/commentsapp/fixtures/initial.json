@@ -1,0 +1,42 @@
+[
+  {
+    "model": "commentsapp.Post",
+    "pk": 1,
+    "fields": {
+      "header": "The boundless emptiness of vision is to witness with justice.",
+      "message": "All remarkable suns praise each other, only unveiled believers have a thought. Advice, politics and a holographic heavens of blessing. Zion is not the united light of the individual. Mineral is not evil in shangri-la, the underworld, or over there, but everywhere. When the wind of sorrow emerges the ascensions of the aspect, the zen will know individual."
+    }
+  },
+  {
+    "model": "commentsapp.Post",
+    "pk": 2,
+    "fields": {
+      "header": "Our separate dimension for energy is to view others substantially.",
+      "message": "Heavens of uniqueness will wonderfully emerge an imminent lotus. As i have remembered you, so you must receive one another. Zion of result will qabalistic develop a closest lotus. The yogi has awareness, but not everyone remembers it. Who can need the reincarnation and emptiness of a lover if he has the honorable manifestation of the scholar."
+    }
+  },
+  {
+    "model": "commentsapp.Comment",
+    "pk": 1,
+    "fields": {
+      "post": 1,
+      "message": "Heavens of uniqueness will wonderfully emerge an imminent lotus. As i have remembered you, so you must receive one another. Zion of result will qabalistic develop a closest lotus. The yogi has awareness, but not everyone remembers it. Who can need the reincarnation and emptiness of a lover if he has the honorable manifestation of the scholar."
+    }
+  },
+  {
+    "model": "commentsapp.Comment",
+    "pk": 2,
+    "fields": {
+      "post": 1,
+      "message": "Who can shape the manifestation and meditation of a spirit if he has the bright life of the sun? You have to lure, and experience reincarnation by your flying. Celestine graces loves most faiths. Shangri-la of ascension will authoratively emerge a small lord. One must trap the follower in order to remember the lover of powerful trust."
+    }
+  },
+  {
+    "model": "commentsapp.Comment",
+    "pk": 3,
+    "fields": {
+      "post": 2,
+      "message": "Be searious for whoever remains, because each has been needed with affirmation. Relativity, pain and preach. Therapists, teachers, and boundless yogis will always protect them. The manifestation of following cows is searious. Powerful joys witness most politics. Who can fear the surrender and paradox of a power if he has the pictorial resurrection of the ego."
+    }
+  }
+]

@@ -1,8 +1,9 @@
 from django.conf.urls import url
 
 from commentsapp.views import comments
-app_name = 'pizza_app'
+
+app_name = 'commentsapp'
 
 urlpatterns = [
-    url(r'', comments, name='comments'),
+    url(r'', comments),
 ]
