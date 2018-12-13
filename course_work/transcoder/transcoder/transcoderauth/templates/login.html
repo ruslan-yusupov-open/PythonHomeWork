@@ -14,7 +14,8 @@
         <div class="container">
             <div class="row d-flex justify-content-center text-white">
                 <div class="col-md-6 border rounded shadow d-flex justify-content-center">
-                    <form id="c_form-h" class="m-3">
+                    <form id="c_form-h" class="m-3" action="{% url 'transcoderauth:login' %}">
+                        {% csrf_token %}
                         <div class="form-group row" style=""><label for="inputmailh"
                                                                     class="col-3 col-form-label">E-mail</label>
                             <div class="col-auto">
@@ -26,6 +27,7 @@
                                 <input type="password" class="form-control" id="inputpasswordh" placeholder="Password">
                             </div>
                         </div>
+                        {{ form.as_p }}
                         <button type="submit" class="btn btn-secondary">Log In</button>
                     </form>
                 </div>
