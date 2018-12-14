@@ -3,3 +3,4 @@ venv/
 *.pyc
 lesson14/task01/test.db
 lesson15/task01/test.db
+course_work/transcoder/transcoder/db.sqlite3

@@ -15,10 +15,12 @@
         </div>
         <div class="row d-flex justify-content-center text-white">
             <div class="col-md-6 border rounded shadow d-flex justify-content-center">
-                <form id="c_form-h" class="m-3" novalidate action="{% url 'transcoderauth:login' %}">
+                <form method="post" id="c_form-h" class="m-3" novalidate action="{% url 'transcoderauth:login' %}">
                     {% csrf_token %}
 
+                    <span class="text-warning">
                     {{ form.non_field_errors }}
+                    </span>
 
                     {% for hidden_field in form.hidden_fields %}
                         {{ hidden_field.errors }}
@@ -29,8 +31,24 @@
                         <div class="form-group row {% if field == form.password %}mt-3{% endif %}">
                             <label for="{{ field.name }}" class="col-3 col-form-label">{{ field.label }}</label>
                             <div class="col-auto">
-                                {% render_field field class="form-control" placeholder=field.label id=field.name %}
+                                {% if form.is_bound %}
+                                    {% if field.errors %}
+                                        {% render_field field class="form-control is-invalid" placeholder=field.label id=field.name %}
+                                    {% else %}
+                                        {% render_field field class="form-control is-valid" placeholder=field.label id=field.name %}
+                                    {% endif %}
+                                {% else %}
+                                    {% render_field field class="form-control" placeholder=field.label id=field.name %}
+                                {% endif %}
+
                             </div>
+                            {% if form.is_bound and field.errors %}
+                                {% for error in field.errors %}
+                                    <div class="text-warning ml-2 mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     {% endfor %}
 
