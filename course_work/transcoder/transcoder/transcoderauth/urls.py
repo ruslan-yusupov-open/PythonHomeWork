@@ -11,7 +11,8 @@ urlpatterns = [
 
     path('login/', LoginView.as_view(
         template_name='login.html',
-        form_class=CustomLoginForm
+        form_class=CustomLoginForm,
+        success_url='/',
     ), name='login'),
 
     path('logout/', logout_then_login, name='logout'),
