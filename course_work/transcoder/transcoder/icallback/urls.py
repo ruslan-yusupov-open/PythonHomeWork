@@ -1,4 +1,4 @@
-"""transcoder URL Configuration
+"""icallback URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.1/topics/http/urls/
@@ -15,11 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from transcoderbase import urls as base_urls
-from transcoderauth import urls as auth_urls
+from icallback_base import urls as base_urls
+from icallback_auth import urls as auth_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include(auth_urls, namespace='transcoderauth')),
-    path('', include(base_urls, namespace='transcoderbase'))
+    path('auth/', include(auth_urls, namespace='icallback_auth')),
+    path('', include(base_urls, namespace='icallback_base'))
 ]

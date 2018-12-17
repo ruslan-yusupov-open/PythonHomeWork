@@ -3,9 +3,9 @@ from django.contrib.auth.views import LoginView, logout_then_login
 from django.urls import path
 from django.views.generic import CreateView
 
-from transcoderauth.forms import CustomCreationForm, CustomLoginForm
+from icallback_auth.forms import CustomCreationForm, CustomLoginForm
 
-app_name = 'transcoderauth'
+app_name = 'icallback_auth'
 
 urlpatterns = [
 

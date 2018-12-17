@@ -1,8 +1,8 @@
 from django.urls import path
 
-from transcoderbase.views import features, pricing, index, about
+from icallback_base.views import features, pricing, index, about
 
-app_name = 'transcoderbase'
+app_name = 'icallback_base'
 
 urlpatterns = [
     path('features/', features, name='features'),
