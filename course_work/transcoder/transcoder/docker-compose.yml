@@ -1,0 +1,10 @@
+version: '3'
+services:
+  site:
+    build:
+      dockerfile: Dockerfile.dev
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - /c/myprojects/icallback/site:/app/django

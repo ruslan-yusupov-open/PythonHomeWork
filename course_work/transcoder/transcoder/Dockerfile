@@ -1,0 +1,10 @@
+FROM python:alpine
+
+WORKDIR '/app/django'
+COPY ./Pipfile .
+COPY ./Pipfile.lock .
+RUN command -v pipenv || pip install pipenv
+RUN pipenv run pipenv install
+
+COPY . .
+CMD ["pipenv", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
