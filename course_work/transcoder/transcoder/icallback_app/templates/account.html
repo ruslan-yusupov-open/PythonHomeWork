@@ -1,0 +1,54 @@
+{% extends '_base.html' %}
+
+{% block title %}Account{% endblock %}
+
+{% block content %}
+    <div class="container mt-3 mb-3 pt-5 p-2">
+        <div class="row">
+            <div class="col-md-12 border p-2">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_tab == "calls" %}active show{% endif %}"
+                           href="{% url 'icallback_app:calls' %}"
+{#                           data-toggle="tab" data-target="#tabone"#}
+                        >
+                            Calls
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_tab == "widgets" %}active show{% endif %}"
+                           href="{% url 'icallback_app:widgets' %}"
+{#                           data-toggle="tab" data-target="#tabtwo"#}
+                        >
+                            Widgets
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_tab == "statistics" %}active show{% endif %}"
+                           href="{% url 'icallback_app:statistics' %}"
+{#                           data-toggle="tab" data-target="#tabthree"#}
+                        >
+                            Statistics
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content mt-2">
+                    <div class="tab-pane fade  {% if active_tab == "calls" %}active show{% endif %}"
+                         id="tabone" role="tabpanel">
+                        {% include "calls.html" %}
+                    </div>
+                    <div class="tab-pane fade {% if active_tab == "widgets" %}active show{% endif %}"
+                         id="tabtwo" role="tabpanel">
+                        {% include "widgets.html" %}
+                    </div>
+                    <div class="tab-pane fade  {% if active_tab == "statistics" %}active show{% endif %}"
+                         id="tabthree" role="tabpanel">
+                        {% include "statistics.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block nav %}
+{% endblock %}

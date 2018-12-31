@@ -1,0 +1,83 @@
+{% load widget_tweaks %}
+
+<h2 class="ml-2 pt-1">Widgets</h2>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Site</th>
+                <th>Key</th>
+                <th>Active</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for widget in widgets %}
+                <tr>
+                    <td>{{ widget.site_name }}</td>
+                    <td>{{ widget.widget_key }}</td>
+                    <td>
+                        <a href="{% url 'icallback_app:widget_toggle' widget_id=widget.id %}">
+                            {{ widget.active | yesno:"Active,Not active" }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'icallback_app:widget_delete' widget_id=widget.id %}">DELETE</a>
+                    </td>
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container col-lg-8">
+        <div class="card">
+            <div class="card-header"> Add a new widget</div>
+            <div class="card-body">
+                <form method="post" id="c_form-h" class="" novalidate action="{% url 'icallback_app:widgets' %}">
+                    {% csrf_token %}
+
+                    <span class="text-warning">
+                    {{ widget_form.non_field_errors }}
+                    </span>
+
+                    {% for hidden_field in widget_form.hidden_fields %}
+                        {{ hidden_field.errors }}
+                        {{ hidden_field }}
+                    {% endfor %}
+
+                    {% for field in widget_form.visible_fields %}
+                        <div class="form-group row">
+                            <label for="{{ field.name }}" class="col-2 col-form-label">{{ field.label }}</label>
+                            <div class="col-auto">
+                                {% if widget_form.is_bound %}
+                                    {% if field.errors %}
+                                        {% render_field field class="form-control is-invalid" placeholder=field.help_text id=field.name %}
+                                    {% else %}
+                                        {% render_field field class="form-control is-valid" placeholder=field.help_text id=field.name %}
+                                    {% endif %}
+                                {% else %}
+                                    {% render_field field class="form-control" placeholder=field.help_text id=field.name %}
+                                {% endif %}
+                            </div>
+                            {% if widget_form.is_bound and field.errors %}
+                                {% for error in field.errors %}
+                                    <div class="text-danger ml-2 mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -15,6 +15,10 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+IS_PROD = os.environ.get('IS_PROD')
+
+print("prod mode", IS_PROD)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -22,9 +26,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_gza^k@@pbii*wtt^$us9g-#o4qttuz!q$8owj-u#*$n&-c3*z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+if IS_PROD:
+    DEBUG = False
+    ALLOWED_HOSTS = ['icallback.leadcm.com']
+else:
+    DEBUG = True
+    ALLOWED_HOSTS = ['192.168.99.100']
 
 # Application definition
 
@@ -120,5 +127,24 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/account/calls'
 LOGIN_URL = '/auth/login'
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+# MEDIA_URL = '/media/'
+
+# noinspection PyUnresolvedReferences
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+
+if IS_PROD:
+    SECURE_HSTS_SECONDS = 60
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True

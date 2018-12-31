@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from icallback_base import urls as base_urls
 from icallback_auth import urls as auth_urls
+from icallback_app import urls as app_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include(auth_urls, namespace='icallback_auth')),
+    path('account/', include(app_urls, namespace='icallback_app')),
     path('', include(base_urls, namespace='icallback_base'))
 ]

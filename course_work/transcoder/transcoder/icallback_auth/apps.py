@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class ICallbackauthConfig(AppConfig):
+class TranscoderauthConfig(AppConfig):
     name = 'icallback_auth'
